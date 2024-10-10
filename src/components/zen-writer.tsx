@@ -88,6 +88,19 @@ export function ZenWriter() {
   }
 
   useEffect(() => {
+    const savedStreak = localStorage.getItem('streak')
+    if (savedStreak) {
+      setStreak(parseInt(savedStreak, 10))
+    }
+
+    const lastWriteDate = localStorage.getItem('lastWriteDate')
+    if (lastWriteDate) {
+      const today = new Date().toDateString()
+      if (lastWriteDate !== today) {
+        setStreak(0)
+      }
+    }
+
     let interval: NodeJS.Timeout
     if (isTimerRunning && remainingTime > 0) {
       interval = setInterval(() => {
@@ -100,7 +113,7 @@ export function ZenWriter() {
       checkAchievements()
     }
     return () => clearInterval(interval)
-  }, [isTimerRunning, remainingTime])
+  }, [isTimerRunning, remainingTime, setStreak, addExperience, checkAchievements, streak])
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
